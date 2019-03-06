@@ -1,0 +1,14 @@
+Click==7.0
+Flask==1.0.2
+itsdangerous==1.1.0
+Jinja2==2.10
+MarkupSafe==1.1.0
+numpy==1.16.0
+pandas==0.24.0
+pd==0.0.1
+python-dateutil==2.7.5
+pytz==2018.9
+six==1.12.0
+virtualenv==16.3.0
+Werkzeug==0.14.1
+XlsxWriter==1.1.2
