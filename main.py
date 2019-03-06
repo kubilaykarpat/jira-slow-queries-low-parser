@@ -4,27 +4,20 @@ import zipfile
 
 import pandas as pd
 from flask import make_response, abort, render_template
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 def parse_logs(log_file):
     slow_queries = []
-    for line in log_file:
-        # line = log_file.readline()
+    for i in range(0, 1000):
+        line = log_file.readline()
         if type(line) is bytes:
             line = line.decode("utf-8")
         if not line:
             break
-        line = line.rstrip()
 
         splits = line.split("INFO", 1)
-        if len(splits) < 2:
-            slow_queries.append(new_error_line(line))
-            continue
-
         words_before_info = splits[0].split()
-        if len(words_before_info) < 3:
-            continue
-
         words_after_info = splits[1].split()
         if "Sending mailitem" in line:
             match = re.search('JQL query \'(.+?)\' produced lucene query', splits[1])
@@ -51,7 +44,7 @@ def parse_logs(log_file):
         date = words_before_info[0] + ' ' + words_before_info[1]
         thread = words_before_info[2]
         user = words_after_info[0]
-        slow_queries.append(new_slow_query(date, thread, user, function, duration, line))
+        slow_queries.append(new_slow_query(date, thread, user, function, duration))
 
     return slow_queries
 
@@ -64,21 +57,13 @@ def get_duration_from_line(line):
         return match.group(1)
 
 
-def new_slow_query(date, thread, user, function, duration, line):
+def new_slow_query(date, thread, user, function, duration):
     return {
         'date': date,
         'thread': thread,
         'user': user,
         'function': function,
-        'duration': duration,
-        'line': line
-    }
-
-
-def new_error_line(line):
-    return {
-        'function': 'ERROR Could not parse the line',
-        'line': line
+        'duration': duration
     }
 
 
@@ -109,10 +94,10 @@ def main(request):
         request_file = next(iter(files.values()))
         log_file = None
 
-        if request_file.filename.lower().endswith('.zip'):
-            log_file = get_first_file_from_zip(request_file)
-        else:  # request_file.filename.lower().endswith(('.txt', '.log')):
+        if request_file.filename.lower().endswith(('.txt', '.log')):
             log_file = request_file
+        elif request_file.filename.lower().endswith('.zip'):
+            log_file = get_first_file_from_zip(request_file)
         slow_queries = parse_logs(log_file)
 
         df = pd.DataFrame(slow_queries)
@@ -124,7 +109,13 @@ def main(request):
         resp.headers["Content-Type"] = "text/csv"
         return resp
     else:
-        return render_template('index.html')
+        env = Environment(
+            loader=FileSystemLoader('./templates'),
+            autoescape=select_autoescape(['html', 'xml'])
+        )
+
+        template = env.get_template('index.html')
+        return render_template(template)
 
 
 if __name__ == "__main__":
