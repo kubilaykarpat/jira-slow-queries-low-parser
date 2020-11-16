@@ -3,24 +3,26 @@
 <head>
     <title>Jira Slow Queries Log Analyzer</title>
     <meta charset="utf-8">
-    <style>
-    </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h3 class="text-muted">Jira Slow Queries Log Analyzer</h3>
+        <h3>Jira Slow Queries Log Analyzer</h3>
+        This tool helps you to analyze slow queries log created by Jira in a more structured way.
+        <br/>
+        Currently only logs created in Jira 7 versions are supported!
     </div>
     <form method=post enctype=multipart/form-data>
         <input type=file name=file>
         <input type=submit value=Upload>
     </form>
-    <span>Note: Please upload your atlassian_slow_queries.log file. File extension must be log or zip.
-        <br>Maximum file size is 10 MB. You can upload log files in .zip file.</span>
+    <span>
+        Note: Please upload your atlassian_slow_queries.log file. File extension must be log or zip.
+        <br>
+        Maximum file size is 10 MB. You can upload log files in .zip file.
+        <br>
+    </span>
 </div>
-
-<script>
-</script>
 </body>
 </html>
