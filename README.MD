@@ -1,4 +1,4 @@
-#Jira Slow Queries Log Parser
+# Jira Slow Queries Log Parser
 Jira Server and Data Center products keep logs of JQL searches which take longer than a limit (400 ms).  
 These logs can be found under *<JIRA_HOME>*/log/atlassian_slow_queries.log file. This file should something like this:
 ```
