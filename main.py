@@ -99,6 +99,7 @@ def get_first_file_from_zip(zip_file):
         return zfile.open(largest_file)  # or extract the one with largest size if there is a no name match
 
 
+# This is the main functionality of the app and its entry point in Google Cloud Functions
 def main(request):
     if request.method == 'POST':
         files = request.files
@@ -127,6 +128,7 @@ def main(request):
         return render_template('index.html')
 
 
+# This is the entry point of app on a local development environment
 if __name__ == "__main__":
     from flask import Flask, request
 
